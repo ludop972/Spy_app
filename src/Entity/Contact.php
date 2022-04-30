@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\AgentRepository;
+use App\Repository\ContactRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: AgentRepository::class)]
-class Agent
+#[ORM\Entity(repositoryClass: ContactRepository::class)]
+class Contact
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,25 +21,21 @@ class Agent
     #[ORM\Column(type: 'string', length: 255)]
     private $firstname;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $id_code;
-
     #[ORM\Column(type: 'datetime')]
     private $date_of_birth;
 
-    #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'agents')]
+    #[ORM\Column(type: 'string', length: 255)]
+    private $code_name;
+
+    #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'contacts')]
     #[ORM\JoinColumn(nullable: false)]
     private $nationality;
 
-    #[ORM\ManyToMany(targetEntity: Specialities::class, inversedBy: 'agents')]
-    private $specialities;
-
-    #[ORM\ManyToMany(targetEntity: Mission::class, mappedBy: 'agents')]
+    #[ORM\ManyToMany(targetEntity: Mission::class, mappedBy: 'contacts')]
     private $missions;
 
     public function __construct()
     {
-        $this->specialities = new ArrayCollection();
         $this->missions = new ArrayCollection();
     }
 
@@ -72,18 +68,6 @@ class Agent
         return $this;
     }
 
-    public function getIdCode(): ?string
-    {
-        return $this->id_code;
-    }
-
-    public function setIdCode(string $id_code): self
-    {
-        $this->id_code = $id_code;
-
-        return $this;
-    }
-
     public function getDateOfBirth(): ?\DateTimeInterface
     {
         return $this->date_of_birth;
@@ -92,6 +76,18 @@ class Agent
     public function setDateOfBirth(\DateTimeInterface $date_of_birth): self
     {
         $this->date_of_birth = $date_of_birth;
+
+        return $this;
+    }
+
+    public function getCodeName(): ?string
+    {
+        return $this->code_name;
+    }
+
+    public function setCodeName(string $code_name): self
+    {
+        $this->code_name = $code_name;
 
         return $this;
     }
@@ -109,30 +105,6 @@ class Agent
     }
 
     /**
-     * @return Collection<int, specialities>
-     */
-    public function getSpecialities(): Collection
-    {
-        return $this->specialities;
-    }
-
-    public function addSpeciality(specialities $speciality): self
-    {
-        if (!$this->specialities->contains($speciality)) {
-            $this->specialities[] = $speciality;
-        }
-
-        return $this;
-    }
-
-    public function removeSpeciality(specialities $speciality): self
-    {
-        $this->specialities->removeElement($speciality);
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Mission>
      */
     public function getMissions(): Collection
@@ -144,7 +116,7 @@ class Agent
     {
         if (!$this->missions->contains($mission)) {
             $this->missions[] = $mission;
-            $mission->addAgent($this);
+            $mission->addContact($this);
         }
 
         return $this;
@@ -153,7 +125,7 @@ class Agent
     public function removeMission(Mission $mission): self
     {
         if ($this->missions->removeElement($mission)) {
-            $mission->removeAgent($this);
+            $mission->removeContact($this);
         }
 
         return $this;

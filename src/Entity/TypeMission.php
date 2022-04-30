@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\HideoutsRepository;
+use App\Repository\TypeMissionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: HideoutsRepository::class)]
-class Hideouts
+#[ORM\Entity(repositoryClass: TypeMissionRepository::class)]
+class TypeMission
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,19 +16,9 @@ class Hideouts
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $alias;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private $address;
-
-    #[ORM\Column(type: 'string', length: 255)]
     private $type;
 
-    #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'hideouts')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $country;
-
-    #[ORM\ManyToMany(targetEntity: Mission::class, mappedBy: 'hideouts')]
+    #[ORM\OneToMany(mappedBy: 'type_of_mission', targetEntity: Mission::class)]
     private $missions;
 
     public function __construct()
@@ -41,30 +31,6 @@ class Hideouts
         return $this->id;
     }
 
-    public function getAlias(): ?string
-    {
-        return $this->alias;
-    }
-
-    public function setAlias(string $alias): self
-    {
-        $this->alias = $alias;
-
-        return $this;
-    }
-
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(string $address): self
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
     public function getType(): ?string
     {
         return $this->type;
@@ -73,18 +39,6 @@ class Hideouts
     public function setType(string $type): self
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    public function getCountry(): ?country
-    {
-        return $this->country;
-    }
-
-    public function setCountry(?country $country): self
-    {
-        $this->country = $country;
 
         return $this;
     }
@@ -101,7 +55,7 @@ class Hideouts
     {
         if (!$this->missions->contains($mission)) {
             $this->missions[] = $mission;
-            $mission->addHideout($this);
+            $mission->setTypeOfMission($this);
         }
 
         return $this;
@@ -110,7 +64,10 @@ class Hideouts
     public function removeMission(Mission $mission): self
     {
         if ($this->missions->removeElement($mission)) {
-            $mission->removeHideout($this);
+            // set the owning side to null (unless already changed)
+            if ($mission->getTypeOfMission() === $this) {
+                $mission->setTypeOfMission(null);
+            }
         }
 
         return $this;
