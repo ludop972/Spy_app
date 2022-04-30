@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Spécialités - Spy App{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Les spécialités</h1>
+
+    <table class="table mt-5">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for speciality in specialities %}
+            <tr>
+                <th>{{ speciality.id }}</th>
+                <td>{{ speciality.name }}</td>
+                <td><a class="btn btn-warning btn-sm" href="{{ path('app_specialities_edit', { id: speciality.id }) }}">Modifier</a></td>
+                {# <td><a class="btn btn-danger btn-sm" href="{{ path('app_specialities_delete', { id: speciality.id }) }}">Supprimer</a></td> #}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a class="btn btn-block btn-info text-center" href="{{ path('app_specialities_add') }}">Ajouter une spécialité</a>
+{% endblock %}

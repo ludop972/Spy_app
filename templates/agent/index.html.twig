@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des agents - Spy App{% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Gérer les agents</h1>
+    <table class="table mt-5">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Date de naissance</th>
+            <th scope="col">Nationalité</th>
+            <th scope="col">Actions</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for agent in agents %}
+            <tr>
+                <th scope="row">{{ agent.id }}</th>
+                <td>{{ agent.firstname }}</td>
+                <td>{{ agent.lastname }}</td>
+                <td>{{ agent.dateOfBirth|date("m/d/Y") }}</td>
+                <td>{{ agent.nationality }}</td>
+                <td><a class="btn btn-success btn-sm" href="{{ path('app_agent_details', { id: agent.id }) }}">Afficher</a></td>
+                <td><a class="btn btn-warning btn-sm" href="{{ path('app_edit_agent', { id: agent.id }) }}">Modifier</a></td>
+                <td><a class="btn btn-danger btn-sm" href="#">Supprimer</a></td>
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="text-center">
+        <a href="{{ path('app_add_agent') }}" class="btn btn-primary btn-block"> Ajouter un agent ?</a>
+    </div>
+{% endblock %}
