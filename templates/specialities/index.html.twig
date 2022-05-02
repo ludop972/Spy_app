@@ -3,6 +3,9 @@
 {% block title %}Spécialités - Spy App{% endblock %}
 
 {% block content %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success"> {{ message }}</div>
+    {% endfor %}
 <h1 class="text-center">Les spécialités</h1>
 
     <table class="table mt-5">
@@ -19,10 +22,12 @@
                 <th>{{ speciality.id }}</th>
                 <td>{{ speciality.name }}</td>
                 <td><a class="btn btn-warning btn-sm" href="{{ path('app_specialities_edit', { id: speciality.id }) }}">Modifier</a></td>
-                {# <td><a class="btn btn-danger btn-sm" href="{{ path('app_specialities_delete', { id: speciality.id }) }}">Supprimer</a></td> #}
+                <td>{{ include('specialities/delete.html.twig') }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    <a class="btn btn-block btn-info text-center" href="{{ path('app_specialities_add') }}">Ajouter une spécialité</a>
+    <div class="float-end">
+        <a class="btn btn-block btn-info" href="{{ path('app_specialities_add') }}">Ajouter une spécialité</a>
+    </div>
 {% endblock %}

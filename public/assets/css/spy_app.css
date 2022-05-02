@@ -9,3 +9,16 @@
     text-decoration: none;
     color: white;
 }
+
+.no-things {
+    background-color: lightgray;
+    border-radius: 10px;
+    margin-top: 4px;
+}
+
+.no-things p a:hover {
+    transition-duration: 1.5s;
+    opacity: 1;
+    background-color: white;
+    border-radius: 4px;
+}

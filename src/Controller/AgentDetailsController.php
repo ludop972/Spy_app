@@ -17,7 +17,7 @@ class AgentDetailsController extends AbstractController
     {
         $oneAgent = $em->getRepository(Agent::class)->findOneBy(['id' => $id]);
         return $this->render('agent_details/index.html.twig', [
-            'agent' => $oneAgent
+            'agents' => $oneAgent
         ]);
     }
 
@@ -31,6 +31,7 @@ class AgentDetailsController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $em->persist($agent);
             $em->flush();
+            $this->addFlash('success', 'L\'agent : '.$agent->getIdCode().' ajoutée avec succès');
             return $this->redirectToRoute('app_agent');
         }
 
@@ -46,11 +47,24 @@ class AgentDetailsController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $em->flush();
+            $this->addFlash('success', 'L\'agent : '.$agent->getIdCode().' modifiée avec succès');
             return $this->redirectToRoute('app_agent');
         }
 
         return $this->render('agent_details/add.html.twig',[
             'form' => $form->createView()
         ]);
+    }
+
+    #[Route('/admin/delete_agent/{id}', name: 'app_delete_agent')]
+    public function deleteAgent(EntityManagerInterface $em, Agent $agent, Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $agent->getId(), $request->request->get('_token'))) {
+            $em->remove($agent);
+            $em->flush();
+            $this->addFlash('success', 'L\'agent : '. $agent->getIdCode().' supprimée avec succès');
+        }
+            return $this->redirectToRoute('app_agent');
+
     }
 }

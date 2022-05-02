@@ -1,0 +1,5 @@
+<form method="post" action="{{ path('app_delete_agent', {'id': agent.id}) }}" onsubmit="return confirm('Voulez vous vraiment supprimer {{ agent.idCode}} ?');">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ agent.id) }}">
+    <button class="btn btn-sm btn-danger ">Supprimer</button>
+</form>

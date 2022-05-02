@@ -1,39 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ agent.idcode }} - Spy App {% endblock %}
+{% block title %}{{ agents.idcode }} - Spy App {% endblock %}
 
 {% block content %}
-    <h1 class="text-center">Détails de l'agent : {{ agent.idCode }}</h1>
-    <table class="table mt-5">
+    <h1 class="text-center">Détails de l'agent : {{ agents.idCode }}</h1>
+    <table class="table mt-5 table-responsive">
         <thead>
         <tr>
         </tr>
         </thead>
         <tbody>
         <tr>
-            {{ dump(agent) }}
             <th scope="row">Prénom :</th>
-            <td>{{ agent.lastname }}</td>
+            <td>{{ agents.firstname }}</td>
         </tr>
         <tr>
             <th>Nom :</th>
-            <td>{{ agent.lastname }}</td>
+            <td>{{ agents.lastname }}</td>
         </tr>
         <tr>
             <th>Date de naissance :</th>
-            <td>{{ agent.dateOfBirth|date("m/d/Y") }}</td>
+            <td>{{ agents.dateOfBirth|date("m/d/Y") }}</td>
         </tr>
         <tr>
             <th>Nom de code</th>
-            <td>{{ agent.idCode }}</td>
+            <td>{{ agents.idCode }}</td>
         </tr>
         <tr>
             <th>Nationalité :</th>
-            <td>{{ agent.nationality }}</td>
+            <td>{{ agents.nationality }}</td>
         </tr>
         <tr>
             <th>Compétences :</th>
-
+             <td>{% for agent in agents.specialities  %}
+                    &#x2022; {{ agent.name }}<br>
+                {% endfor %}</td>
         </tr>
 
         </tbody>
