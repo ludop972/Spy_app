@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Planques - Spy App{% endblock %}
+
+{% block content %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success"> {{ message }}</div>
+    {% endfor %}
+    <h1 class="text-center">Les Planques</h1>
+    <div class="row ">
+        <div class="col-md-3 mt-5">
+            <h4 class="fs-5">Effectuer une recherche par Alias</h4>
+            <form>
+                {{ form_row(form.string) }}
+                {{ form_row(form.nationalities) }}
+                {{ form_widget(form.filtrer) }}
+            </form>
+
+        </div>
+        <div class="col-md-9">
+            <table class="table mt-5">
+                <thead>
+                <tr>
+                    <th scope="col">{{ knp_pagination_sortable(hideouts, 'Id', 'h.id') }}</th>
+                    <th scope="col">{{ knp_pagination_sortable(hideouts, 'Alias', 'h.alias') }}</th>
+                    <th scope="col">Adresse</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Pays</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for hideout in hideouts %}
+                    <tr>
+                        <th scope="row">{{ hideout.id }}</th>
+                        <td>{{ hideout.alias }}</td>
+                        <td>{{ hideout.address }}</td>
+                        <td>{{ hideout.type }}</td>
+                        <td>{{ hideout.country }}</td>
+                        {% if app.user %}
+                            <td><a class="btn btn-success btn-sm" href="{{ path('app_hideouts_details', { id: hideout.id }) }}">Afficher</a></td>
+                            <td><a class="btn btn-warning btn-sm" href="{{ path('app_hideouts_edit', { id: hideout.id }) }}">Modifier</a></td>
+                            <td>{{ include('hideouts_details/delete.html.twig') }}</td>
+                        {% endif %}
+                    </tr>
+                {% else %}
+                    <tr class="text-center">
+                        <td colspan="12">Malheureusement la planque que vous recherchez n'a pas été créer &#128517; </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-center">
+                {{ knp_pagination_render(hideouts) }}
+            </div>
+            <div class="float-end">
+                <a class="btn btn-block btn-primary" href="{{ path('app_hideouts_add') }}">Ajouter une planque</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -45,6 +45,9 @@ class SearchType extends AbstractType
                 'class' => Specialities::class,
                 'multiple' => true,
                 'expanded' => true,
+                'attr' => [
+                    'id' => "spe{{ speciality.id }}"
+                ]
             ])
             ->add('nationalities', EntityType::class, [
                 'label' => "Filtrer par nationalité :",
@@ -52,11 +55,13 @@ class SearchType extends AbstractType
                 'class' => Country::class,
                 'multiple' => true,
                 'expanded' => true,
-            ])
-            ->add('submit', Submittype::class, [
-                'label' => 'Filtrer',
                 'attr' => [
-                    'class' => 'btn-block btn-success btn-sm'
+                    'id' => "spe{{ nationality.id }}"
+                ]
+            ])
+            ->add('filtrer', SubmitType::class, [
+                'attr' => [
+                    'class' => 'btn btn-success mt-3 w-100'
                 ]
             ]);
     }

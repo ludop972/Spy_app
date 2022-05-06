@@ -21,6 +21,11 @@ class TypeMission
     #[ORM\OneToMany(mappedBy: 'type_of_mission', targetEntity: Mission::class)]
     private $missions;
 
+    public function __toString()
+    {
+        return $this->getType();
+    }
+
     public function __construct()
     {
         $this->missions = new ArrayCollection();

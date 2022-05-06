@@ -2,11 +2,14 @@
 
 namespace App\Repository;
 
+use App\Classe\Search;
 use App\Entity\Specialities;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Specialities>
@@ -18,9 +21,12 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SpecialitiesRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private PaginatorInterface $paginator;
+
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Specialities::class);
+        $this->paginator = $paginator;
     }
 
     /**
@@ -47,6 +53,21 @@ class SpecialitiesRepository extends ServiceEntityRepository
         }
     }
 
+    public function findWidthSearch(Search $search): PaginationInterface
+    {
+        $query = $this
+            ->createQueryBuilder('s');
+            //->select('s');
+        if (!empty($search->string)) {
+            $query = $query
+                ->andWhere('s.name LIKE :string')
+                ->setParameter('string', "%{$search->string}%");
+        }
+
+
+        $query->getQuery()->getResult();
+        return $this->paginator->paginate($query,$search->page,4);
+    }
     // /**
     //  * @return Specialities[] Returns an array of Specialities objects
     //  */

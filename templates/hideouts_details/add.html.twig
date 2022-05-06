@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une Planque - Spy App {% endblock %}
+
+{% block content %}
+    <a class="float-end btn btn-primary btn-sm " href="{{ path('app_hideouts') }}">Retour</a>
+    <h1 class="text-center">Ajouter une planque</h1>
+    {{ form(form) }}
+{% endblock %}

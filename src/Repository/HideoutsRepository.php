@@ -2,11 +2,14 @@
 
 namespace App\Repository;
 
+use App\Classe\Search;
 use App\Entity\Hideouts;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Hideouts>
@@ -18,9 +21,13 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class HideoutsRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+
+    private PaginatorInterface $paginator;
+
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Hideouts::class);
+        $this->paginator = $paginator;
     }
 
     /**
@@ -47,6 +54,28 @@ class HideoutsRepository extends ServiceEntityRepository
         }
     }
 
+    public function findWidthSearch(Search $search): PaginationInterface
+    {
+        $query = $this
+            ->createQueryBuilder('h')
+            ->select('c','h')
+            ->join('h.country', 'c');
+
+        if (!empty($search->string)) {
+            $query = $query
+                ->andWhere('h.alias LIKE :string')
+                ->setParameter('string', "%{$search->string}%");
+        }
+
+        if (!empty($search->nationalities)) {
+            $query = $query
+                ->andWhere('h.country IN (:country)')
+                ->setParameter('country', $search->nationalities);
+        }
+
+        $query->getQuery()->getResult();
+        return $this->paginator->paginate($query,$search->page,4);
+    }
     // /**
     //  * @return Hideouts[] Returns an array of Hideouts objects
     //  */

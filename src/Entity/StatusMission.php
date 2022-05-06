@@ -21,6 +21,11 @@ class StatusMission
     #[ORM\OneToMany(mappedBy: 'status', targetEntity: Mission::class)]
     private $missions;
 
+    public function __toString()
+    {
+        return $this->getStatus();
+    }
+
     public function __construct()
     {
         $this->missions = new ArrayCollection();

@@ -21,7 +21,7 @@ class Target
     #[ORM\Column(type: 'string', length: 255)]
     private $firstname;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'datetime')]
     private $date_of_birth;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -68,12 +68,12 @@ class Target
         return $this;
     }
 
-    public function getDateOfBirth(): ?string
+    public function getDateOfBirth(): ?\DateTimeInterface
     {
         return $this->date_of_birth;
     }
 
-    public function setDateOfBirth(string $date_of_birth): self
+    public function setDateOfBirth(\DateTimeInterface $date_of_birth): self
     {
         $this->date_of_birth = $date_of_birth;
 

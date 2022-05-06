@@ -1,0 +1,5 @@
+<form method="post" action="{{ path('app_hideouts_delete', {'id': hideout.id}) }}" onsubmit="return confirm('Voulez vous vraiment supprimer {{ hideout.alias}} ?');">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ hideout.id) }}">
+    <button class="btn btn-sm btn-danger ">Supprimer</button>
+</form>

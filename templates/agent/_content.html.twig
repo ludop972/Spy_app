@@ -1,0 +1,37 @@
+<table class="table table-responsive mt-5">
+            <thead>
+            <tr>
+                <th scope="col">{{ knp_pagination_sortable(agents, 'Id', 'a.id') }}</th>
+                <th scope="col">{{ knp_pagination_sortable(agents, 'Prénom', 'a.firstname') }}</th>
+                <th scope="col">{{ knp_pagination_sortable(agents, 'Nom', 'a.lastname') }}</th>
+                <th scope="col">Date de naissance</th>
+                <th scope="col">Nationalité</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for agent in agents %}
+                <tr>
+                    <th scope="row">{{ agent.id }}</th>
+                    <td>{{ agent.firstname }}</td>
+                    <td>{{ agent.lastname }}</td>
+                    <td>{{ agent.dateOfBirth|date("d/m/Y") }}</td>
+                    <td>{{ agent.nationality }}</td>
+                    <td><a class="btn btn-success btn-sm" href="{{ path('app_agent_details', { id: agent.id }) }}">Afficher</a></td>
+                    {% if app.user %}
+                        <td><a class="btn btn-warning btn-sm" href="{{ path('app_edit_agent', { id: agent.id }) }}">Modifier</a></td>
+                        <td>{{ include('agent_details/delete.html.twig') }}</td>
+                    {% endif %}
+                </tr>
+            {% else %}
+                <tr class="text-center">
+                    <td colspan="12">Malheureusement l'agent que vous recherchez n'a pas été créer &#128517; </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-center">{{ knp_pagination_render(agents) }}</div>
+        <div class="text-center">
+            <a href="{{ path('app_add_agent') }}" class="btn btn-primary btn-block"> Ajouter un agent</a>
+        </div>

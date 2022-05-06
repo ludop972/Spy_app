@@ -24,11 +24,11 @@ class Mission
     #[ORM\Column(type: 'string', length: 255)]
     private $code_name;
 
-    #[ORM\ManyToOne(targetEntity: country::class, inversedBy: 'missions')]
+    #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'missions')]
     #[ORM\JoinColumn(nullable: false)]
     private $country;
 
-    #[ORM\ManyToMany(targetEntity: agent::class, inversedBy: 'missions')]
+    #[ORM\ManyToMany(targetEntity: Agent::class, inversedBy: 'missions')]
     private $agents;
 
     #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'missions')]
@@ -57,6 +57,10 @@ class Mission
     #[ORM\ManyToOne(targetEntity: StatusMission::class, inversedBy: 'missions')]
     #[ORM\JoinColumn(nullable: false)]
     private $status;
+
+    public function __toString() {
+        return $this->getTitle();
+    }
 
     public function __construct()
     {
@@ -274,4 +278,75 @@ class Mission
 
         return $this;
     }
+
+    public function contactsAreValid(): bool
+    {
+        $dataCountry = $this->country;
+        $dataContacts = $this->contacts;
+
+        foreach ($dataContacts as $contact) {
+            if ($dataCountry != $contact->getNationality()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function stashsIsValid(): bool
+    {
+        $dataCountry = $this->country;
+        $dataHideouts = $this->hideouts;
+
+        foreach ($dataHideouts as $hideout) {
+            if ($hideout->getCountry() != $dataCountry) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function agentsSpecialitiesAreValid(): bool
+    {
+        $dataSpecialities = $this->specialities;
+        $dataAgents = $this->agents;
+
+        $validSpecialitiesAgents = 0;
+
+        foreach ($dataAgents as $agent) {
+            $agentSpecialities = $agent->displaySpecialities();
+            if (in_array($dataSpecialities->getName(), $agentSpecialities)) {
+                $validSpecialitiesAgents += 1;
+            }
+            if ($validSpecialitiesAgents == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function agentsCountryAreValid(): bool
+    {
+        $dataAgents = $this->agents;
+        $dataTargets = $this->targets;
+
+        foreach ($dataAgents as $agent) {
+            foreach ($dataTargets as $target) {
+                if ($agent->getNationality() == $target->getNationality()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public function missionError(): bool
+    {
+
+        if (!$this->contactsAreValid() || !$this->stashsIsValid() || !$this->agentsSpecialitiesAreValid() || !$this->agentsCountryAreValid()) {
+            return false;
+        }
+        return true;
+    }
+
+
 }

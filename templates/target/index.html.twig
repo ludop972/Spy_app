@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cibles - Spy App{% endblock %}
+
+{% block content %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success"> {{ message }}</div>
+    {% endfor %}
+    <h1 class="text-center">Les Cibles</h1>
+    <div class="row ">
+        <div class="col-md-3 mt-5">
+            <h4 class="fs-5">Effectuer une recherche par nom</h4>
+            <form>
+                {{ form_row(form.string) }}
+                {{ form_row(form.nationalities) }}
+                {{ form_widget(form.filtrer) }}
+            </form>
+
+        </div>
+        <div class="col-md-9">
+            <table class="table mt-5">
+                <thead>
+                <tr>
+                    <th scope="col">{{ knp_pagination_sortable(targets, 'Id', 't.id') }}</th>
+                    <th scope="col">{{ knp_pagination_sortable(targets, 'Prénom', 't.firstname') }}</th>
+                    <th scope="col">{{ knp_pagination_sortable(targets, 'Nom', 't.lastname') }}</th>
+                    <th scope="col">Date de naissance</th>
+                    <th scope="col">Nationalité</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for target in targets %}
+                    <tr>
+                        <th scope="row">{{ target.id }}</th>
+                        <td>{{ target.firstname }}</td>
+                        <td>{{ target.lastname }}</td>
+                        <td>{{ target.dateOfBirth|date("d/m/Y") }}</td>
+                        <td>{{ target.nationality }}</td>
+                        {% if app.user %}
+                            <td><a class="btn btn-success btn-sm" href="{{ path('app_target_details', { id: target.id }) }}">Afficher</a></td>
+                            <td><a class="btn btn-warning btn-sm" href="{{ path('app_target_edit', { id: target.id }) }}">Modifier</a></td>
+                            <td>{{ include('target_details/delete.html.twig') }}</td>
+                        {% endif %}
+                    </tr>
+                {% else %}
+                    <tr class="text-center">
+                        <td colspan="12">Malheureusement la cible que vous recherchez n'a pas été créer &#128517; </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-center">
+                {{ knp_pagination_render(targets) }}
+            </div>
+            <div class="float-end">
+                <a class="btn btn-block btn-primary" href="{{ path('app_target_add') }}">Ajouter une cible</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

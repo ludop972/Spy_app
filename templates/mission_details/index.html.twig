@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ mission.title }} - Spy App {% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Détails de la mission : {{ mission.title }}</h1>
+    <table class="table mt-5 table-responsive">
+        <thead>
+        <tr>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">Titre :</th>
+            <td>{{ mission.title }}</td>
+        </tr>
+        <tr>
+            <th>Nom de code</th>
+            <td>{{ mission.codeName }}</td>
+        </tr>
+        <tr>
+            <th>Début de la mission :</th>
+            <td>{{ mission.startDate| date("d/m/Y") }}</td>
+        </tr>
+        <tr>
+            <th>Fin de la mission:</th>
+            <td>{{ mission.endDate| date("d/m/Y") }}</td>
+        </tr>
+        <tr>
+            <th>Status de la mission :</th>
+            <td class="badge rounded-pill bg-warning text-dark">{{ mission.status }}</td>
+        </tr>
+        <tr>
+            <th>Type de mission :</th>
+            <td>{{ mission.typeOfMission }}</td>
+        </tr>
+        <tr>
+            <th>Spécialité requise :</th>
+            <td>{{ mission.specialities }}</td>
+        </tr>
+        <tr>
+            <th>Description :</th>
+            <td>{{ mission.description }}</td>
+        </tr>
+        <tr>
+            <th>Pays :</th>
+            <td>{{ mission.country }}</td>
+        </tr>
+        <tr>
+            <th>Cible(s) : </th>
+
+            <td>
+                {% for mission in mission.targets  %}
+                    &#x2022; {{ mission.firstname }} {{ mission.lastname }}<br>
+                {% endfor %}
+            </td>
+
+        </tr>
+        <tr>
+            <th>Planque : </th>
+            {% for mission in mission.hideouts  %}
+                <td>{{ mission.alias }} | {{ mission.address }} - {{ mission.country }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th>Agent(s) : </th>
+
+            <td> {% for mission in mission.agents  %}
+                    &#x2022; {{ mission.firstname }} {{ mission.lastname }}, alias {{ mission.idCode}} | {{ mission.nationality }}<br>
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <th>Contact(s) : </th>
+            <td>
+                {% for mission in mission.contacts  %}
+                    &#x2022; {{ mission.firstname }} {{ mission.lastname }}, alias {{ mission.codeName}} | {{ mission.nationality }}<br>
+                {% endfor %}
+            </td>
+
+        </tr>
+    {{ dump(mission) }}
+        </tbody>
+    </table>
+    <div class="text-center">
+        <a href="{{ path('app_mission_edit', { id: mission.id })  }}" class="btn btn-warning btn-block m-2">Modifier ?</a>
+        <a href="{{ path('app_home') }}" class="btn btn-primary btn-block"> Retour </a>
+    </div>
+{% endblock %}

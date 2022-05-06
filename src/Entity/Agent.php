@@ -43,6 +43,11 @@ class Agent
         $this->missions = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->getLastname();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -157,5 +162,16 @@ class Agent
         }
 
         return $this;
+    }
+
+    public function displaySpecialities(): array
+    {
+        $speciality = $this->specialities;
+        $specialitiesList = [];
+        foreach($speciality as $s)
+        {
+            $specialitiesList[] = $s->getName();
+        }
+        return $specialitiesList;
     }
 }

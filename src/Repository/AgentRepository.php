@@ -53,18 +53,30 @@ class AgentRepository extends ServiceEntityRepository
         }
     }
 
-    public function findWidthSearch(Search $search): PaginationInterface
+    public function findWidthSearch(Search $search, $filters = null, $filters2 = null): PaginationInterface
     {
         $query = $this
-            ->createQueryBuilder('p')
-            ->select('c', 'p')
-            ->select('s','p')
-            ->join('p.nationality', 'c') // on joint les propriétés de l'agent ( relation )
-            ->join('p.specialities', 's'); // on joint les propriétés de l'agent ( relation )
+            ->createQueryBuilder('a')
+            ->select('c', 'a')
+            ->select('s','a')
+            ->join('a.nationality', 'c') // on joint les propriétés de l'agent ( relation )
+            ->join('a.specialities', 's'); // on joint les propriétés de l'agent ( relation )
+
+        if($filters !== null){
+            $query = $query
+                ->andWhere('a.nationality IN (:nationality)')
+                ->setParameter('nationality', array_filter($filters));
+        }
+
+        if($filters2 !== null){
+            $query = $query
+                ->andWhere('s.id IN (:specialities)')
+                ->setParameter('specialities',array_filter($filters2));
+        }
 
         if (!empty($search->string)) {
             $query = $query
-                ->andWhere('p.lastname LIKE :string')
+                ->andWhere('a.lastname LIKE :string')
                 ->setParameter('string', "%{$search->string}%");
         }
 
@@ -83,17 +95,6 @@ class AgentRepository extends ServiceEntityRepository
         $query->getQuery();
         return $this->paginator->paginate($query,$search->page,4);
     }
-
-    /* public function getPaginatedAgents(int $page, int $limit)
-    {
-        $query = $this
-            ->createQueryBuilder('a')
-            ->orderBy('a.id')
-            ->setFirstResult(($page * $limit) - $limit)
-            ->setMaxResults($limit);
-        return $query->getQuery()->getResult();
-    } */
-
 
 
     // /**

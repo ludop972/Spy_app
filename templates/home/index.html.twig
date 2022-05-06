@@ -4,46 +4,63 @@
 
 
 {% block content %}
-
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success"> {{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger"> {{ message }}</div>
+    {% endfor %}
     <div class="text-center">
         <h1>Service des renseignements</h1>
         <br>
         <p>Bienvenue sur le site de l'agence d'espionnage N°<b>1</b> Mondial. <br>
             Ici vous pourrez consulter la liste des missions liés à nos agents</p>
     </div>
-    <hr>
-    <table class="table">
+    <div class="row form-custom">
+        <h6>Effectuer une recherche :</h6>
+        <form class="">
+            {{ form_row(form.string) }}
+            {{ form_widget(form.filtrer, { 'attr': { 'class' : 'btn btn-success btn-sm' }}) }}
+        </form>
+    </div>
+    <br>
+    <br>
+    <table class="table table-responsive">
         <thead>
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th scope="col">{{ knp_pagination_sortable(missions, 'Id', 'm.id') }}</th>
+            <th scope="col">{{ knp_pagination_sortable(missions, 'Titre', 'm.title') }}</th>
+            <th scope="col">{{ knp_pagination_sortable(missions, 'Nom de code', 'm.code_name') }}</th>
+            <th scope="col">Description</th>
+            <th scope="col">Statut de la mission</th>
+            <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-        </tr>
+        {% for mission in missions %}
+            <tr>
+                <th>{{ mission.id }}</th>
+                <td>{{ mission.title }}</td>
+                <td>{{ mission.codeName }}</td>
+                <td>{{ mission.description }}</td>
+                <td class="statusMission">{{ mission.status }}</td>
+                <td><a class="btn btn-success btn-sm" href="{{ path('app_mission_details', { id: mission.id }) }}">Afficher</a></td>
+                {% if app.user %}
+                    <td><a class="btn btn-warning btn-sm" href="{{ path('app_mission_edit', { id: mission.id }) }}">Modifier</a></td>
+                    <td>{{ include('mission_details/delete.html.twig') }}</td>
+                {% endif %}
+            </tr>
+        {% else %}
+            <tr class="text-center">
+                <td colspan="12">Malheureusement la mission que vous recherchez n'a pas été créer &#128517; </td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
-    {% if is_granted('ROLE_ADMIN') %}
-        <div class="text-center">
-            <a href="#" class="btn btn-success btn-block"> Ajouter une mission ?</a>
-        </div>
-    {% endif %}
+    <div class="d-flex justify-content-center">
+        {{ knp_pagination_render(missions) }}
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_mission_add') }}" class="btn btn-primary"> Ajouter une mission ?</a>
+        {% endif %}
+    </div>
 {% endblock %}

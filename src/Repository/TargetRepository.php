@@ -2,11 +2,14 @@
 
 namespace App\Repository;
 
+use App\Classe\Search;
 use App\Entity\Target;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Target>
@@ -18,9 +21,14 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TargetRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+
+    private PaginatorInterface $paginator;
+
+
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Target::class);
+        $this->paginator = $paginator;
     }
 
     /**
@@ -47,6 +55,28 @@ class TargetRepository extends ServiceEntityRepository
         }
     }
 
+    public function findWidthSearch(Search $search): PaginationInterface
+    {
+        $query = $this
+            ->createQueryBuilder('t')
+            ->select('n','t')
+            ->join('t.nationality', 'n');
+
+        if (!empty($search->string)) {
+            $query = $query
+                ->andWhere('t.lastname LIKE :string')
+                ->setParameter('string', "%{$search->string}%");
+        }
+
+        if (!empty($search->nationalities)) {
+            $query = $query
+                ->andWhere('t.nationality IN (:nationality)')
+                ->setParameter('nationality', $search->nationalities);
+        }
+
+        $query->getQuery()->getResult();
+        return $this->paginator->paginate($query,$search->page,4);
+    }
     // /**
     //  * @return Target[] Returns an array of Target objects
     //  */

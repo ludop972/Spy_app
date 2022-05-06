@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AgentDetailsController extends AbstractController
 {
-    #[Route('/agent/details/{id}', name: 'app_agent_details')]
+    #[Route('/admin/agent/details/{id}', name: 'app_agent_details')]
     public function index(EntityManagerInterface $em, $id): Response
     {
         $oneAgent = $em->getRepository(Agent::class)->findOneBy(['id' => $id]);
@@ -51,7 +51,7 @@ class AgentDetailsController extends AbstractController
             return $this->redirectToRoute('app_agent');
         }
 
-        return $this->render('agent_details/add.html.twig',[
+        return $this->render('agent_details/edit.html.twig',[
             'form' => $form->createView()
         ]);
     }

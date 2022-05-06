@@ -11,6 +11,7 @@
     <!-- Bootstrap core CSS -->
     <link href="{{ '/assets/css/bootstrap.css' }}" rel="stylesheet" type="text/css">
     <link href="{{ '/assets/css/spy_app.css' }}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
         .bd-placeholder-img {
@@ -28,9 +29,6 @@
         }
     </style>
 
-
-    <!-- Custom styles for this template -->
-    <link href="sticky-footer-navbar.css" rel="stylesheet">
 </head>
 <body class="d-flex flex-column h-100">
 
@@ -47,6 +45,15 @@
                     {% if is_granted('ROLE_ADMIN') %}
                         <li>
                             <a class="nav-link active" aria-current="page" href="{{ path('app_agent') }}">Agents</a>
+                        </li>
+                        <li>
+                            <a class="nav-link active" aria-current="page" href="{{ path('app_contact') }}">Contacts</a>
+                        </li>
+                        <li>
+                            <a class="nav-link active" aria-current="page" href="{{ path('app_target') }}">Cibles</a>
+                        </li>
+                        <li>
+                            <a class="nav-link active" aria-current="page" href="{{ path('app_hideouts') }}">Planques</a>
                         </li>
                         <li>
                             <a class="nav-link active" aria-current="page" href="{{ path('app_specialities') }}">Spécialités</a>
@@ -68,7 +75,6 @@
 <!-- Begin page content -->
 <main class="mt-5">
     <div class="container mt-5">
-
         {% block content %}
         {% endblock %}
     </div>
@@ -80,7 +86,9 @@
     </div>
 </footer>
 
+{% block javascripts %}
 
+{% endblock %}
 <script src="{{ '/assets/js/bootstrap.bundle.js' }}"></script>
 
 </body>

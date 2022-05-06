@@ -2,25 +2,34 @@
 
 namespace App\Controller;
 
-use App\Entity\Agent;
+use App\Classe\Search;
 use App\Entity\Specialities;
-use App\Form\AgentType;
+use App\Form\SearchType;
 use App\Form\SpecialitiesType;
+use App\Repository\SpecialitiesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SpecialitiesController extends AbstractController
 {
     #[Route('/admin/specialities', name: 'app_specialities')]
-    public function index(EntityManagerInterface $em): Response
+    public function index( EntityManagerInterface $em,Request $request, SpecialitiesRepository $specialitiesRepository): Response
     {
-        $specialities = $em->getRepository(Specialities::class)->findAll();
+        $search = new Search();
+        $search->page = $request->get('page',1); // pagination ici on se trouve sur la page 1 (affichage de base)
+
+        $form = $this->createForm(SearchType::class, $search);
+        $form->handleRequest($request);
+
+        $specialities = $specialitiesRepository->findWidthSearch($search);
 
         return $this->render('specialities/index.html.twig', [
-            'specialities' => $specialities
+            'specialities' => $specialities,
+            'form' => $form->createView()
         ]);
     }
 
@@ -43,7 +52,7 @@ class SpecialitiesController extends AbstractController
     }
 
     #[Route('/admin/edit_specialities/{id}', name: 'app_specialities_edit')]
-    public function modifyAgent(Request $request, EntityManagerInterface $em, Specialities $specialities): Response
+    public function editSpecialities(Request $request, EntityManagerInterface $em, Specialities $specialities): Response
     {
         $form = $this->createForm(SpecialitiesType::class, $specialities);
         $form->handleRequest($request);

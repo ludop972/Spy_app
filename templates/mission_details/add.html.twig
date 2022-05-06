@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une Mission - Spy App {% endblock %}
+
+{% block content %}
+    <a class="float-end btn btn-primary btn-sm " href="{{ path('app_home') }}">Retour</a>
+    <h1 class="text-center mb-5">Ajouter une mission</h1>
+    <hr>
+    {{ form_start(form) }}
+ <div class="row">
+     <div class="col-md-6">
+         {{ form_row(form.start_date) }}
+     </div>
+     <div class="col-md-6">
+         {{ form_row(form.end_date) }}
+     </div>
+     <div class="col-md-6">
+         {{ form_row(form.title) }}
+     </div>
+     <div class="col-md-6">
+         {{ form_row(form.code_name) }}
+     </div>
+     <div class="col-md-6">
+         {{ form_row(form.type_of_mission) }}
+     </div>
+     <div class="col-md-6">
+         {{ form_row(form.status) }}
+     </div>
+     {{ form_row(form.description) }}
+     <div class="col-md-6">
+         {{ form_row(form.country) }}
+     </div>
+     <div class="col-md-6">
+         {{ form_row(form.hideouts) }}
+     </div>
+     {{ form_row(form.specialities) }}
+     <div class="col-md-6">
+         {{ form_row(form.targets) }}
+     </div>
+     <div class="col-md-6">
+         {{ form_row(form.contacts) }}
+     </div>
+     <div class="col-md-12">
+         {{ form_row(form.agents) }}
+     </div>
+
+ </div>
+    {{ form_end(form) }}
+
+{% endblock %}

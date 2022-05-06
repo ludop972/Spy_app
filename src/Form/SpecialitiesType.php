@@ -20,7 +20,11 @@ class SpecialitiesType extends AbstractType
                     'placeholder' => 'Merci de renseigner une spécialité'
                 ]
             ])
-            ->add('Valider', SubmitType::class)
+            ->add('Valider', SubmitType::class, [
+                'attr' => [
+                    'class' => 'btn btn-success'
+                ],
+            ])
         ;
     }
 
