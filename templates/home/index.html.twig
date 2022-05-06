@@ -43,11 +43,11 @@
                 <td>{{ mission.title }}</td>
                 <td>{{ mission.codeName }}</td>
                 <td>{{ mission.description }}</td>
-                <td class="statusMission">{{ mission.status }}</td>
+                <td class="d-flex justify-content-center badge rounded-pill bg-info text-dark">{{ mission.status }}</td>
                 <td><a class="btn btn-success btn-sm" href="{{ path('app_mission_details', { id: mission.id }) }}">Afficher</a></td>
                 {% if app.user %}
-                    <td><a class="btn btn-warning btn-sm" href="{{ path('app_mission_edit', { id: mission.id }) }}">Modifier</a></td>
-                    <td>{{ include('mission_details/delete.html.twig') }}</td>
+                    <td><a class="btn btn-warning btn-sm " href="{{ path('app_mission_edit', { id: mission.id }) }}">Modifier</a></td>
+                   <td> {{ include('mission_details/delete.html.twig') }}</td>
                 {% endif %}
             </tr>
         {% else %}
@@ -59,8 +59,10 @@
     </table>
     <div class="d-flex justify-content-center">
         {{ knp_pagination_render(missions) }}
-        {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('app_mission_add') }}" class="btn btn-primary"> Ajouter une mission ?</a>
-        {% endif %}
     </div>
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="text-center">
+            <a href="{{ path('app_mission_add') }}" class="btn btn-primary text-center"> Ajouter une mission ?</a>
+        </div>
+    {% endif %}
 {% endblock %}

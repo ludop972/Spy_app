@@ -35,9 +35,10 @@ class MissionDetailsController extends AbstractController
                 $this->addFlash('error', "Votre nouvelle mission n'a pas pu être ajoutée car elle contient des erreurs. Veuillez vérifier les éléments suivants : Compétence(s) du ou des agents / Nationalité des agents ou contacts / Pays de la planque.");
                 return $this->redirectToRoute('app_home');
             }else{
-                $this->addFlash('success', 'La mission : '.$mission->getTitle().' a bien été créé.');            };
-            $em->persist($mission);
-            $em->flush();
+                $this->addFlash('success', 'La mission : '.$mission->getTitle().' a bien été créé.');
+            }
+                $em->persist($mission);
+                $em->flush();
 
             return $this->redirectToRoute('app_home');
         }
@@ -57,12 +58,12 @@ class MissionDetailsController extends AbstractController
             if (!$mission->missionError()) {
                 $this->addFlash('error', "Votre mission n'a pas pu être modifiée car elle contient des erreurs. Veuillez vérifier les éléments suivants : Spécialitée(s) du ou des agents / Nationalité des agents ou contacts / Pays de la planque.");
                 return $this->redirectToRoute('app_home');
-            } else{
+            } else {
                 $this->addFlash('success', "La mission : ". $mission->getTitle()." à bien été modifiée !");
             }
             $em->flush();
             return $this->redirectToRoute('app_home');
-        };
+        }
 
         return $this->render('mission_details/edit.html.twig', [
             'missions' => $mission,
