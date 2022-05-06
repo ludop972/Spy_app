@@ -92,7 +92,8 @@ class MissionType extends AbstractType
                 'choice_label' => function($hideouts) {
                     return $hideouts->getAlias() . ' ' . "(".$hideouts->getCountry().")";
                 },
-                'mapped' => false,
+                'expanded' => false,
+                'multiple' => true,
                 'class' => Hideouts::class
             ])
             ->add('specialities', EntityType::class, [

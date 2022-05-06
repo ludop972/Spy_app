@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MissionDetailsController extends AbstractController
 {
-    #[Route('/admin/mission/details/{id}', name: 'app_mission_details')]
+    #[Route('/mission/details/{id}', name: 'app_mission_details')]
     public function index(EntityManagerInterface $em, $id): Response
     {
         $mission = $em->getRepository(Mission::class)->findOneBy(['id' => $id]);

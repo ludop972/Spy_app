@@ -82,7 +82,9 @@
         </tbody>
     </table>
     <div class="text-center">
+        {% if app.user %}
         <a href="{{ path('app_mission_edit', { id: mission.id })  }}" class="btn btn-warning btn-block m-2">Modifier ?</a>
+        {% endif %}
         <a href="{{ path('app_home') }}" class="btn btn-primary btn-block"> Retour </a>
     </div>
 {% endblock %}
